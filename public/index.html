@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full-Stack App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="not-authenticated">
+    <nav class="navbar">
+        <a href="#/" class="logo">Full-Stack App (Patrick Dave Cagas)</a>
+        <div class="nav-links">
+            <div class="auth-links role-logged-out">
+                <a href="#/login">Login</a>
+                <a href="#/register">Register</a>
+            </div>
+            <div class="user-dropdown-wrapper role-logged-in">
+                <button class="dropdown-trigger" id="dropdownTrigger">
+                    <span id="navUsername">User</span>
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="#/profile">Profile</a>
+                    <a href="#/requests">My Requests</a>
+                    <div class="role-admin">
+                        <a href="#/employees">Employees</a>
+                        <a href="#/accounts">Accounts</a>
+                        <a href="#/departments">Departments</a>
+                    </div>
+                    <a href="#" class="logout-link" id="logoutLink">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="page active" id="home-page">
+            <h1>Welcome to Full-Stack App</h1>
+            <p class="subtitle">A Lab 2 frontend prototype that simulates:</p>
+            <ul class="features">
+                <li>Email registration and verification flow</li>
+                <li>Login with simulated token storage</li>
+                <li>Role-based UI for Admin and User</li>
+                <li>CRUD pages for Accounts, Departments, Employees, and Requests</li>
+            </ul>
+            <div class="note">
+                <strong>Note:</strong> This Lab 2 interface stores prototype data in
+                <span class="highlight">sessionStorage</span>.
+            </div>
+            <a href="#/register" class="btn">Get Started →</a>
+        </div>
+
+        <div class="page" id="register-page">
+            <h1>Register Account</h1>
+            <form id="registerForm" class="form-card">
+                <div class="form-group">
+                    <label for="regFirstName">First Name</label>
+                    <input type="text" id="regFirstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="regLastName">Last Name</label>
+                    <input type="text" id="regLastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Password (min 6 chars)</label>
+                    <input type="password" id="regPassword" minlength="6" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">Sign Up</button>
+                    <a href="#/login" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="page" id="verify-email-page">
+            <h1>Verify Your Email</h1>
+            <div class="alert alert-success" id="verifyMessage">
+                A verification link has been sent to <strong id="verifyEmail"></strong>
+            </div>
+            <p>For demo purposes, click below to simulate verification.</p>
+            <div class="form-actions verify-actions">
+                <button class="btn btn-primary" id="simulateVerifyBtn" type="button">Simulate Email Verification</button>
+                <a href="#/login" class="btn btn-secondary">Go to Login</a>
+            </div>
+        </div>
+
+        <div class="page" id="login-page">
+            <h1>Login</h1>
+            <div class="alert alert-success" id="loginSuccessMessage" hidden>Email verified! You may now log in.</div>
+            <form id="loginForm" class="form-card">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <a href="#/" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="page" id="profile-page">
+            <h1>My Profile</h1>
+            <div class="form-card" id="profileContent"></div>
+        </div>
+
+        <div class="page" id="requests-page">
+            <div class="page-header">
+                <h1>My Requests</h1>
+                <button class="btn btn-success" id="newRequestBtn" type="button">+ New Request</button>
+            </div>
+            <div id="requestsList"></div>
+        </div>
+
+        <div class="page" id="accounts-page">
+            <div class="page-header">
+                <h1>Accounts</h1>
+                <button class="btn btn-success" id="addAccountBtn" type="button">+ Add Account</button>
+            </div>
+            <div id="accountsTable"></div>
+            <div class="form-card" id="accountFormSection" hidden>
+                <h2>Add/Edit Account</h2>
+                <form id="accountForm">
+                    <input type="hidden" id="accountId">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="accFirstName">First Name</label>
+                            <input type="text" id="accFirstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="accLastName">Last Name</label>
+                            <input type="text" id="accLastName" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="accEmail">Email</label>
+                        <input type="email" id="accEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="accPassword">Password</label>
+                        <input type="password" id="accPassword" placeholder="Leave blank to keep current">
+                    </div>
+                    <div class="form-group">
+                        <label for="accRole">Role</label>
+                        <select id="accRole">
+                            <option value="User">User</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <label><input type="checkbox" id="accVerified"> Verified</label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-secondary" id="cancelAccountBtn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="page" id="departments-page">
+            <div class="page-header">
+                <h1>Departments</h1>
+                <button class="btn btn-success" id="addDeptBtn" type="button">+ Add Department</button>
+            </div>
+            <div id="departmentsTable"></div>
+        </div>
+
+        <div class="page" id="employees-page">
+            <div class="page-header">
+                <h1>Employees</h1>
+                <button class="btn btn-success" id="addEmployeeBtn" type="button">+ Add Employee</button>
+            </div>
+            <div id="employeesTable"></div>
+            <div class="form-card" id="employeeFormSection" hidden>
+                <h2>Add/Edit Employee</h2>
+                <form id="employeeForm">
+                    <input type="hidden" id="employeeEditId">
+                    <div class="form-group">
+                        <label for="empId">Employee ID</label>
+                        <input type="text" id="empId" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="empEmail">User Email</label>
+                        <input type="email" id="empEmail" placeholder="Must match existing account" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="empPosition">Position</label>
+                        <input type="text" id="empPosition" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="empDept">Department</label>
+                        <select id="empDept"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="empHireDate">Hire Date</label>
+                        <input type="date" id="empHireDate">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-secondary" id="cancelEmployeeBtn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal" id="newRequestModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>New Request</h2>
+                <button class="modal-close" id="closeRequestModal" type="button">&times;</button>
+            </div>
+            <form id="newRequestForm">
+                <div class="form-group">
+                    <label for="reqType">Type</label>
+                    <select id="reqType">
+                        <option value="Equipment">Equipment</option>
+                        <option value="Leave">Leave</option>
+                        <option value="Resources">Resources</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Items</label>
+                    <div id="requestItems">
+                        <div class="item-row">
+                            <input type="text" placeholder="Item name" class="item-name">
+                            <input type="number" placeholder="Qty" class="item-qty" value="1" min="1">
+                            <button type="button" class="btn-icon btn-add-item">+</button>
+                            <button type="button" class="btn-icon btn-remove-item">×</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm" id="addRequestItem">+ Add Item</button>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toastContainer"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
